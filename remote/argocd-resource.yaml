@@ -4,6 +4,7 @@ metadata:
   name: generic-argocd
   namespace: my-argocd-namespace # Change this to your target namespace
 spec:
+spec:
   applicationSet:
     resources:
       limits:
@@ -17,11 +18,59 @@ spec:
         enabled: false
       route:
         enabled: false
-  server:
+  controller:
+    processors: {}
+    resources:
+      limits:
+        cpu: "2"
+        memory: 2Gi
+      requests:
+        cpu: 250m
+        memory: 1Gi
+    sharding: {}
+  grafana:
+    enabled: false
+    ingress:
+      enabled: false
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
     route:
-      enabled: true
-      tls:
-        termination: passthrough
+      enabled: false
+  ha:
+    enabled: false
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
+  imageUpdater:
+    enabled: false
+  initialSSHKnownHosts: {}
+  monitoring:
+    enabled: false
+  networkPolicy:
+    enabled: true
+  notifications:
+    enabled: false
+  prometheus:
+    enabled: false
+    ingress:
+      enabled: false
+    route:
+      enabled: false
+  rbac:
+    defaultPolicy: ""
+    policy: |
+      g, system:cluster-admins, role:admin
+      g, cluster-admins, role:admin
+    scopes: '[groups]'
   redis:
     resources:
       limits:
@@ -38,17 +87,35 @@ spec:
       requests:
         cpu: 250m
         memory: 256Mi
-  rbac:
-    defaultPolicy: 'role:admin'
-    policy: |
-      g, system:cluster-admins, role:admin
-  controller:
-    processors: {}
+  server:
+    autoscale:
+      enabled: false
+    grpc:
+      ingress:
+        enabled: false
+    ingress:
+      enabled: false
     resources:
       limits:
-        cpu: "2"
-        memory: 2Gi
+        cpu: 500m
+        memory: 256Mi
       requests:
-        cpu: 250m
-        memory: 1Gi
-    shardings: {}
+        cpu: 125m
+        memory: 128Mi
+    route:
+      enabled: true
+    service:
+      type: ""
+  sso:
+    dex:
+      openShiftOAuth: true
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          cpu: 250m
+          memory: 128Mi
+    provider: dex
+  tls:
+    ca: {}

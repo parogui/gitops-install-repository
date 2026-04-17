@@ -12,10 +12,7 @@ spec:
     - list:
         elements:
           - name: parodrig3-cluster1
-            server: https://kubernetes.default.svc
-            destNamespace: argocd
-            # Helm chart pin — bump after testing (https://github.com/argoproj/argo-helm/releases)
-            chartVersion: "7.7.10"
+            server: https://api.parodrig3-cluster1.sbr-shift.gsslab.brq2.redhat.com:6443
   template:
     metadata:
       name: "{{.name}}-argocd"
@@ -27,7 +24,7 @@ spec:
         path: remote
       destination:
         server: "{{.server}}"
-        namespace: "{{.destNamespace}}"
+        namespace: "argocd"
       syncPolicy:
         automated:
           prune: true
