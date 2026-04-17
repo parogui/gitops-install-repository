@@ -4,7 +4,6 @@ metadata:
   name: gitops-managed-argocd
   namespace: argocd
 spec:
-spec:
   applicationSet:
     resources:
       limits:
@@ -53,8 +52,6 @@ spec:
   initialSSHKnownHosts: {}
   monitoring:
     enabled: false
-  networkPolicy:
-    enabled: true
   notifications:
     enabled: false
   prometheus:
