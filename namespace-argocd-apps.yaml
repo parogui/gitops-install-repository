@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argocd-applications-deployed
+  labels:
+    app.kubernetes.io/part-of: argocd
+    argocd.argoproj.io/managed-by: argocd
+    
