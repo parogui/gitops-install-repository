@@ -1,0 +1,53 @@
+# ApplicationSet that installs a second Argo CD instance (Helm) into namespace "argocd".
+# This resource must be applied to a cluster that ALREADY has an ApplicationSet controller
+# (typically the default OpenShift GitOps Argo CD in openshift-gitops).
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: argocd-helm-bootstrap
+  namespace: openshift-gitops
+spec:
+  goTemplate: true
+  generators:
+    - list:
+        elements:
+          - name: parodrig3-cluster1
+            server: https://kubernetes.default.svc
+            destNamespace: argocd
+            # Helm chart pin — bump after testing (https://github.com/argoproj/argo-helm/releases)
+            chartVersion: "7.7.10"
+  template:
+    metadata:
+      name: "{{.name}}-argocd"
+    spec:
+      project: default
+      source:
+        repoURL: https://argoproj.github.io/argo-helm
+        chart: argo-cd
+        targetRevision: "{{.chartVersion}}"
+        helm:
+          releaseName: argocd
+          values: |
+            global:
+              domain: argocd-parodrig3.apps.parodrig3-cluster1.sbr-shift.gsslab.brq2.redhat.com
+            openshift:
+              enabled: true
+            applicationSet:
+              enabled: true
+            controller:
+              replicas: 1
+            server:
+              route:
+                enabled: true
+                hostname: argocd-parodrig3.apps.parodrig3-cluster1.sbr-shift.gsslab.brq2.redhat.com
+                termination_type: passthrough
+      destination:
+        server: "{{.server}}"
+        namespace: "{{.destNamespace}}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
