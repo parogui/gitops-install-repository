@@ -22,25 +22,9 @@ spec:
     spec:
       project: default
       source:
-        repoURL: https://argoproj.github.io/argo-helm
-        chart: argo-cd
-        targetRevision: "{{.chartVersion}}"
-        helm:
-          releaseName: argocd
-          values: |
-            global:
-              domain: argocd-parodrig3.apps.parodrig3-cluster1.sbr-shift.gsslab.brq2.redhat.com
-            openshift:
-              enabled: true
-            applicationSet:
-              enabled: true
-            controller:
-              replicas: 1
-            server:
-              route:
-                enabled: true
-                hostname: argocd-parodrig3.apps.parodrig3-cluster1.sbr-shift.gsslab.brq2.redhat.com
-                termination_type: passthrough
+        repoURL: https://github.com/parogui/gitops-install-repository.git
+        targetRevision: HEAD
+        path: remote
       destination:
         server: "{{.server}}"
         namespace: "{{.destNamespace}}"
